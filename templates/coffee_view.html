@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}{{ coffee_name }} - Espresso Tasting Tracker{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>{{ coffee_name }}</h2>
+    <div class="header-actions">
+        <a href="{{ url_for('add_entry') }}" class="btn btn-primary">+ Add Entry</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">← All Entries</a>
+    </div>
+</div>
+
+{% if coffees %}
+<div class="coffee-filter">
+    <label for="coffee-filter-select">Switch to Coffee:</label>
+    <select id="coffee-filter-select" class="coffee-select">
+        <option value="">All Coffees</option>
+        {% for coffee in coffees %}
+        <option value="{{ coffee }}" {% if coffee == coffee_name %}selected{% endif %}>{{ coffee }}</option>
+        {% endfor %}
+    </select>
+</div>
+{% endif %}
+
+{% if entries %}
+<div class="entries-info">
+    <p class="info-text">Found {{ entries|length }} entr{{ 'y' if entries|length == 1 else 'ies' }} for this coffee</p>
+</div>
+
+<div class="entries-grid">
+    {% for entry in entries %}
+    <div class="entry-card">
+        <div class="entry-header">
+            <h3>{{ entry.coffee }}</h3>
+            <span class="entry-date">{{ entry.created_at[:10] }}</span>
+        </div>
+        <div class="entry-metrics">
+            <div class="metric">
+                <span class="metric-label">Grinder:</span>
+                <span class="metric-value">{{ entry.grinder_setting }}</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Input:</span>
+                <span class="metric-value">{{ entry.input_weight }}g</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Output:</span>
+                <span class="metric-value">{{ entry.output_weight }}g</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Ratio:</span>
+                <span class="metric-value">{{ entry.extraction_ratio }}:1</span>
+            </div>
+        </div>
+        {% if entry.taste_comment %}
+        <div class="entry-comment">
+            <p>{{ entry.taste_comment }}</p>
+        </div>
+        {% endif %}
+        <div class="entry-actions">
+            <a href="{{ url_for('view_entry', entry_id=entry.id) }}" class="btn btn-sm">View Details</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p>No entries found for this coffee.</p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('coffee-filter-select').addEventListener('change', function() {
+        const coffee = this.value;
+        if (coffee) {
+            window.location.href = '/coffee/' + encodeURIComponent(coffee);
+        } else {
+            window.location.href = '/';
+        }
+    });
+</script>
+{% endblock %}

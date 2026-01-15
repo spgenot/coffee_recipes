@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Entry Details - Espresso Tasting Tracker{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Entry Details</h2>
+    <div class="header-actions">
+        <a href="{{ url_for('coffee_view', coffee_name=entry.coffee) }}" class="btn btn-secondary">View All {{ entry.coffee }}</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">← All Entries</a>
+    </div>
+</div>
+
+<div class="entry-detail-card">
+    <div class="entry-detail-header">
+        <h3>{{ entry.coffee }}</h3>
+        <span class="entry-date">{{ entry.created_at }}</span>
+    </div>
+
+    <div class="entry-detail-metrics">
+        <div class="detail-metric">
+            <span class="detail-label">Grinder Setting</span>
+            <span class="detail-value">{{ entry.grinder_setting }}</span>
+        </div>
+        <div class="detail-metric">
+            <span class="detail-label">Input Weight</span>
+            <span class="detail-value">{{ entry.input_weight }}g</span>
+        </div>
+        <div class="detail-metric">
+            <span class="detail-label">Output Weight</span>
+            <span class="detail-value">{{ entry.output_weight }}g</span>
+        </div>
+        <div class="detail-metric highlight">
+            <span class="detail-label">Extraction Ratio</span>
+            <span class="detail-value">{{ entry.extraction_ratio }}:1</span>
+        </div>
+    </div>
+
+    {% if entry.taste_comment %}
+    <div class="entry-detail-comment">
+        <h4>Taste Notes</h4>
+        <p>{{ entry.taste_comment }}</p>
+    </div>
+    {% else %}
+    <div class="entry-detail-comment">
+        <p class="no-comment">No taste notes recorded for this entry.</p>
+    </div>
+    {% endif %}
+
+    <div class="entry-detail-actions">
+        <a href="{{ url_for('add_entry') }}" class="btn btn-primary">Add New Entry</a>
+    </div>
+</div>
+{% endblock %}
