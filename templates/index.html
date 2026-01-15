@@ -5,7 +5,11 @@
 {% block content %}
 <div class="page-header">
     <h2>All Espresso Entries</h2>
+    {% if current_user.is_authenticated %}
     <a href="{{ url_for('add_entry') }}" class="btn btn-primary">+ Add New Entry</a>
+    {% else %}
+    <a href="{{ url_for('login') }}" class="btn btn-primary">Login to Add Entry</a>
+    {% endif %}
 </div>
 
 {% if coffees %}
@@ -20,9 +24,51 @@
 </div>
 {% endif %}
 
-{% if entries %}
+{% if current_user.is_authenticated and user_entries %}
+<h3 class="section-title">My Entries</h3>
 <div class="entries-grid">
-    {% for entry in entries %}
+    {% for entry in user_entries %}
+    <div class="entry-card my-entry">
+        <div class="entry-header">
+            <h3>{{ entry.coffee }}</h3>
+            <span class="entry-date">{{ entry.created_at[:10] }}</span>
+        </div>
+        <div class="entry-metrics">
+            <div class="metric">
+                <span class="metric-label">Grinder:</span>
+                <span class="metric-value">{{ entry.grinder_setting }}</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Input:</span>
+                <span class="metric-value">{{ entry.input_weight }}g</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Output:</span>
+                <span class="metric-value">{{ entry.output_weight }}g</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Ratio:</span>
+                <span class="metric-value">{{ entry.extraction_ratio }}:1</span>
+            </div>
+        </div>
+        {% if entry.taste_comment %}
+        <div class="entry-comment">
+            <p>{{ entry.taste_comment }}</p>
+        </div>
+        {% endif %}
+        <div class="entry-actions">
+            <a href="{{ url_for('view_entry', entry_id=entry.id) }}" class="btn btn-sm">View Details</a>
+            <a href="{{ url_for('coffee_view', coffee_name=entry.coffee) }}" class="btn btn-sm btn-secondary">View All {{ entry.coffee }}</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if community_entries %}
+<h3 class="section-title">{% if current_user.is_authenticated %}Community Entries{% else %}All Entries{% endif %}</h3>
+<div class="entries-grid">
+    {% for entry in community_entries %}
     <div class="entry-card">
         <div class="entry-header">
             <h3>{{ entry.coffee }}</h3>
@@ -58,9 +104,9 @@
     </div>
     {% endfor %}
 </div>
-{% else %}
+{% elif not current_user.is_authenticated or (not user_entries and not community_entries) %}
 <div class="empty-state">
-    <p>No entries yet. <a href="{{ url_for('add_entry') }}">Add your first espresso entry!</a></p>
+    <p>No entries yet. {% if current_user.is_authenticated %}<a href="{{ url_for('add_entry') }}">Add your first espresso entry!</a>{% else %}<a href="{{ url_for('register') }}">Register</a> or <a href="{{ url_for('login') }}">login</a> to get started!{% endif %}</p>
 </div>
 {% endif %}
 {% endblock %}

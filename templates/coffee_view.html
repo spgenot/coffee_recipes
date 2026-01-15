@@ -6,7 +6,9 @@
 <div class="page-header">
     <h2>{{ coffee_name }}</h2>
     <div class="header-actions">
+        {% if current_user.is_authenticated %}
         <a href="{{ url_for('add_entry') }}" class="btn btn-primary">+ Add Entry</a>
+        {% endif %}
         <a href="{{ url_for('index') }}" class="btn btn-secondary">← All Entries</a>
     </div>
 </div>
@@ -23,13 +25,56 @@
 </div>
 {% endif %}
 
-{% if entries %}
+{% if current_user.is_authenticated and user_entries %}
+<h3 class="section-title">My Entries</h3>
 <div class="entries-info">
-    <p class="info-text">Found {{ entries|length }} entr{{ 'y' if entries|length == 1 else 'ies' }} for this coffee</p>
+    <p class="info-text">Found {{ user_entries|length }} of your entr{{ 'y' if user_entries|length == 1 else 'ies' }} for this coffee</p>
 </div>
-
 <div class="entries-grid">
-    {% for entry in entries %}
+    {% for entry in user_entries %}
+    <div class="entry-card my-entry">
+        <div class="entry-header">
+            <h3>{{ entry.coffee }}</h3>
+            <span class="entry-date">{{ entry.created_at[:10] }}</span>
+        </div>
+        <div class="entry-metrics">
+            <div class="metric">
+                <span class="metric-label">Grinder:</span>
+                <span class="metric-value">{{ entry.grinder_setting }}</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Input:</span>
+                <span class="metric-value">{{ entry.input_weight }}g</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Output:</span>
+                <span class="metric-value">{{ entry.output_weight }}g</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Ratio:</span>
+                <span class="metric-value">{{ entry.extraction_ratio }}:1</span>
+            </div>
+        </div>
+        {% if entry.taste_comment %}
+        <div class="entry-comment">
+            <p>{{ entry.taste_comment }}</p>
+        </div>
+        {% endif %}
+        <div class="entry-actions">
+            <a href="{{ url_for('view_entry', entry_id=entry.id) }}" class="btn btn-sm">View Details</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if anonymous_entries %}
+<h3 class="section-title">{% if current_user.is_authenticated %}Community Entries{% else %}All Entries{% endif %}</h3>
+<div class="entries-info">
+    <p class="info-text">Found {{ anonymous_entries|length }} communit{{ 'y entry' if anonymous_entries|length == 1 else 'y entries' }} for this coffee</p>
+</div>
+<div class="entries-grid">
+    {% for entry in anonymous_entries %}
     <div class="entry-card">
         <div class="entry-header">
             <h3>{{ entry.coffee }}</h3>
@@ -64,9 +109,9 @@
     </div>
     {% endfor %}
 </div>
-{% else %}
+{% elif not current_user.is_authenticated or (not user_entries and not anonymous_entries) %}
 <div class="empty-state">
-    <p>No entries found for this coffee.</p>
+    <p>No entries found for this coffee.{% if current_user.is_authenticated %} <a href="{{ url_for('add_entry') }}">Add the first entry!</a>{% endif %}</p>
 </div>
 {% endif %}
 {% endblock %}

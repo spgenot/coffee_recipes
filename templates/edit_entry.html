@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Entry - Espresso Tasting Tracker{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Edit Espresso Entry</h2>
+    <a href="{{ url_for('view_entry', entry_id=entry.id) }}" class="btn btn-secondary">← Back to Entry</a>
+</div>
+
+<form method="POST" action="{{ url_for('edit_entry', entry_id=entry.id) }}" class="entry-form" id="entry-form">
+    <div class="form-group">
+        <label for="coffee">Coffee Name *</label>
+        <input type="text" id="coffee" name="coffee" class="form-control" 
+               value="{{ coffee or entry.coffee }}" required>
+        <small class="form-help">Enter the name of the coffee you used</small>
+    </div>
+
+    <div class="form-group">
+        <label for="grinder_setting">Grinder Setting *</label>
+        <input type="text" id="grinder_setting" name="grinder_setting" 
+               class="form-control" value="{{ grinder_setting or entry.grinder_setting }}" required>
+        <small class="form-help">Your grinder setting (e.g., "5", "12.5", "Fine")</small>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="input_weight">Input Weight (g) *</label>
+            <input type="number" id="input_weight" name="input_weight" 
+                   class="form-control" value="{{ input_weight or entry.input_weight }}" 
+                   step="0.1" min="0" required>
+            <small class="form-help">Coffee grounds weight in grams</small>
+        </div>
+
+        <div class="form-group">
+            <label for="output_weight">Output Weight (g) *</label>
+            <input type="number" id="output_weight" name="output_weight" 
+                   class="form-control" value="{{ output_weight or entry.output_weight }}" 
+                   step="0.1" min="0" required>
+            <small class="form-help">Espresso output weight in grams</small>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="taste_comment">Taste Notes</label>
+        <textarea id="taste_comment" name="taste_comment" 
+                  class="form-control" rows="4" 
+                  placeholder="Describe the taste, aroma, body, acidity, etc.">{{ taste_comment or entry.taste_comment or '' }}</textarea>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Update Entry</button>
+        <a href="{{ url_for('view_entry', entry_id=entry.id) }}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

@@ -12,7 +12,16 @@
             <h1 class="logo">☕ Espresso Tracker</h1>
             <ul class="nav-links">
                 <li><a href="{{ url_for('index') }}">All Entries</a></li>
+                {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('add_entry') }}">Add Entry</a></li>
+                <li class="user-info">
+                    <span class="user-email">{{ current_user.email }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn-link">Logout</a>
+                </li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('register') }}" class="btn btn-sm">Register</a></li>
+                {% endif %}
             </ul>
         </div>
     </nav>

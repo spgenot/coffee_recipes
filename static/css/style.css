@@ -71,6 +71,39 @@ body {
     color: var(--primary-color);
 }
 
+.nav-links .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-info .user-email {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.btn-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    cursor: pointer;
+}
+
 /* Main Content */
 main {
     padding: 2rem 0;
@@ -374,6 +407,13 @@ main {
     margin-top: 2rem;
     padding-top: 2rem;
     border-top: 2px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.entry-detail-actions form {
+    margin: 0;
 }
 
 /* Form Styles */
@@ -474,6 +514,18 @@ textarea.form-control {
 .info-text {
     color: var(--text-secondary);
     font-size: 0.9375rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin: 2rem 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.entry-card.my-entry {
+    border-left: 4px solid var(--primary-color);
 }
 
 /* Responsive Design */
